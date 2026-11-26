@@ -1,0 +1,93 @@
+<div class="dashboard-wrapper">
+  <!-- Header Section -->
+  <header class="dashboard-header">
+    <div>
+      <p class="greeting-text">Welcome </p>
+      <h1 class="page-title">Financial Overview</h1>
+    </div>
+    <button class="btn-add-primary" routerLink="/add-transaction">
+      <span class="material-symbols-outlined">add</span>
+      Add Transaction
+    </button>
+  </header>
+
+  <!-- Summary Cards Grid -->
+  <section class="summary-grid">
+    <!-- Total Balance Card -->
+    <div class="stat-card balance-card">
+      <div class="card-top">
+        <span class="card-label">Total Balance</span>
+        <span class="material-symbols-outlined card-icon">account_balance_wallet</span>
+      </div>
+      <h2 class="card-amount">Rs. {{ budget.netBalance | number }}</h2>
+      <p class="card-subtext">Available net balance</p>
+    </div>
+
+    <!-- Total Income Card -->
+    <div class="stat-card income-card">
+      <div class="card-top">
+        <span class="card-label">Total Income</span>
+        <div class="icon-badge income-badge">
+          <span class="material-symbols-outlined">trending_up</span>
+        </div>
+      </div>
+      <h2 class="card-amount text-dark">Rs. {{ budget.totalIncome | number }}</h2>
+      <p class="card-subtext text-green">Total inflows recorded</p>
+    </div>
+
+    <!-- Total Expenses Card -->
+    <div class="stat-card expense-card">
+      <div class="card-top">
+        <span class="card-label">Total Expenses</span>
+        <div class="icon-badge expense-badge">
+          <span class="material-symbols-outlined">trending_down</span>
+        </div>
+      </div>
+      <h2 class="card-amount text-dark">Rs. {{ budget.totalExpense | number }}</h2>
+      <p class="card-subtext text-red">{{ expenseCount }} expense transactions</p>
+    </div>
+  </section>
+
+  <!-- Recent Transactions Section -->
+  <section class="recent-section">
+    <div class="section-header">
+      <h3 class="section-title">Recent Transactions</h3>
+      <a routerLink="/transactions" class="view-all-link">View All</a>
+    </div>
+
+    <div class="transaction-list" *ngIf="recentTransactions.length > 0; else emptyState">
+      <div class="transaction-item" *ngFor="let tx of recentTransactions">
+        <div class="tx-left">
+          <div
+            class="tx-icon"
+            [class.bg-green]="tx.type === 'income'"
+            [class.bg-orange]="tx.type === 'expense'"
+          >
+            <span class="material-symbols-outlined">
+              {{ getCategoryIcon(tx.category, tx.type) }}
+            </span>
+          </div>
+          <div>
+            <h4 class="tx-title">{{ tx.title }}</h4>
+            <p class="tx-meta">{{ tx.category }} • {{ tx.date }}</p>
+          </div>
+        </div>
+        <div class="tx-right">
+          <span
+            class="tx-amount"
+            [class.positive]="tx.type === 'income'"
+            [class.negative]="tx.type === 'expense'"
+          >
+            {{ tx.type === 'income' ? '+' : '-' }} Rs. {{ tx.amount | number }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <p style="color: #64748b; font-size: 14px; text-align: center; padding: 20px 0;">
+        No transactions yet. Click "+ Add Transaction" to get started!
+      </p>
+    </ng-template>
+  </section>
+</div>

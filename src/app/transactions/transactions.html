@@ -1,0 +1,90 @@
+<!-- Material Icons & Font (Agar index.html mein pehle se hai toh isay hata dein) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+  rel="stylesheet" />
+
+<div class="transactions-wrapper">
+  <!-- Header Section -->
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">All Transactions</h1>
+      <p class="page-subtitle">View, search, and manage your complete transaction history</p>
+    </div>
+    <button class="btn-add-primary" routerLink="/add-transaction">
+      <span class="material-symbols-outlined">add</span>
+      Add New
+    </button>
+  </header>
+
+  <!-- Search & Filter Controls -->
+  <section class="controls-card">
+    <!-- Search Bar -->
+    <div class="search-box">
+      <span class="material-symbols-outlined search-icon">search</span>
+      <input
+        type="text"
+        class="search-input"
+        [(ngModel)]="searchQuery"
+        placeholder="Search by note or category (e.g., Groceries, Salary)..."
+      />
+    </div>
+
+    <!-- Filter Pills -->
+    <div class="filter-pills">
+      <button
+        type="button"
+        class="pill"
+        [class.active]="selectedFilter === 'all'"
+        (click)="setFilter('all')"
+      >
+        All ({{ filteredTransactions.length }})
+      </button>
+      <button
+        type="button"
+        class="pill"
+        [class.active]="selectedFilter === 'income'"
+        (click)="setFilter('income')"
+      >
+        Income Only
+      </button>
+      <button
+        type="button"
+        class="pill"
+        [class.active]="selectedFilter === 'expense'"
+        (click)="setFilter('expense')"
+      >
+        Expense Only
+      </button>
+    </div>
+  </section>
+
+  <!-- Dynamic Transactions List -->
+  <section class="grouped-list-container">
+    <div class="transaction-list">
+      <div class="transaction-item" *ngFor="let tx of filteredTransactions">
+        <div class="tx-left">
+          <div class="tx-icon" [class.bg-green]="tx.type === 'income'" [class.bg-orange]="tx.type === 'expense'">
+            <span class="material-symbols-outlined">
+              {{ tx.type === 'income' ? 'payments' : 'shopping_cart' }}
+            </span>
+          </div>
+          <div>
+            <h4 class="tx-title">{{ tx.title }}</h4>
+            <p class="tx-meta">{{ tx.category }} • {{ tx.date }}</p>
+          </div>
+        </div>
+
+        <div class="tx-right">
+          <span class="tx-amount" [class.positive]="tx.type === 'income'" [class.negative]="tx.type === 'expense'">
+            {{ tx.type === 'income' ? '+' : '-' }} Rs. {{ tx.amount | number }}
+          </span>
+          <div class="tx-actions">
+            <button type="button" class="action-btn delete-btn" title="Delete" (click)="onDelete(tx.id)">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
